@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    ports:
+      - 8010:8000
+    volumes:
+      - ./app:/usr/src/app:rw
+    command: >
+      sh -c "uvicorn main:app --reload --host=0.0.0.0"
+  db:
+    image: postgres:12.1-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data/:rw
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=homepage
+
+volumes:
+  db_data:
