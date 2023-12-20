@@ -2,7 +2,7 @@ from ..user_domain import UserDomain
 from abc import ABCMeta, abstractmethod
 
 
-class UserRepository(metaclass=ABCMeta):
+class IUserRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_all(self) -> list[UserDomain]:
         pass
