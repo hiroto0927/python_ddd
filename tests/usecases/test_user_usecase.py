@@ -1,4 +1,3 @@
-from re import M
 from app.usecases.user_usecase import UserUsecase, new_user_usecase
 from unittest.mock import MagicMock
 from app.domain.user_domain import UserDomain
