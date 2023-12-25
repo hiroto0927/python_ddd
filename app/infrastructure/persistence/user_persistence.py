@@ -1,13 +1,12 @@
-from typing import List
 from ..models.user_model import User
-from sqlalchemy.orm import Session
 from domain.repository.user_repository import IUserRepository
 from domain.user_domain import UserDomain
+from ..db.db import SessionLocal
 
 
 class UserPersistence:
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self):
+        self.db = SessionLocal()
 
     def find_all(self) -> list[UserDomain]:
         users = self.db.query(User).all()
@@ -37,5 +36,5 @@ class UserPersistence:
         self.db.commit()
 
 
-def new_user_persistence(db: Session) -> IUserRepository:
-    return UserPersistence(db)
+def new_user_persistence() -> IUserRepository:
+    return UserPersistence()
