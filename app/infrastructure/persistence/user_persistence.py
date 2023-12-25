@@ -12,14 +12,14 @@ class UserPersistence:
     def find_all(self) -> list[UserDomain]:
         users = self.db.query(User).all()
         self.db.close()
-        return convert_user_model_to_user_domain_list(users)
+        return list(map(lambda user: user.convert_to_user_domain(), users))
 
     def find_by_id(self, id: int) -> UserDomain:
         user = self.db.query(User).filter(User.id == id).first()
         if user is None:
             raise ValueError("user is not found")
         self.db.close()
-        return convert_user_model_to_user_domain(user)
+        return user.convert_to_user_domain()
 
     def create(self, name: str, age: int) -> UserDomain:
         new_user = User(name=name, age=age)
@@ -27,7 +27,7 @@ class UserPersistence:
         self.db.commit()
         self.db.refresh(new_user)
         self.db.close()
-        return convert_user_model_to_user_domain(new_user)
+        return new_user.convert_to_user_domain()
 
     def delete(self, id: int) -> None:
         user = self.db.query(User).filter(User.id == id)
@@ -39,11 +39,3 @@ class UserPersistence:
 
 def new_user_persistence(db: Session) -> IUserRepository:
     return UserPersistence(db)
-
-
-def convert_user_model_to_user_domain(user: User) -> UserDomain:
-    return UserDomain(user.name, user.age)
-
-
-def convert_user_model_to_user_domain_list(users: List[User]) -> list[UserDomain]:
-    return [convert_user_model_to_user_domain(user) for user in users]
